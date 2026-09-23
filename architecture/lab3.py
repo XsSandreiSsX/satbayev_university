@@ -27,6 +27,23 @@ class Instruction:
         return f"{self.opcode.value} {args}"
 
 
+@dataclass
+class ExecutionResult:
+    register: str | None = None
+    value: int | None = None
+
+    memory_address: int | None = None
+    memory_value: int | None = None
+
+    zf: int | None = None
+    sf: int | None = None
+
+    next_pc: int | None = None
+
+    halt: bool = False
+
+
+
 class Registers:
     def __init__(self):
         self.data = {
@@ -58,23 +75,6 @@ class Memory:
 
     def write(self, address, value):
         self.data[address] = value
-
-
-@dataclass
-class ExecutionResult:
-    register: str | None = None
-    value: int | None = None
-
-    memory_address: int | None = None
-    memory_value: int | None = None
-
-    zf: int | None = None
-    sf: int | None = None
-
-    next_pc: int | None = None
-
-    halt: bool = False
-
 
 class CPU:
     def __init__(self):
@@ -264,97 +264,51 @@ class CPU:
 
             self.show_state()
 
-
-ONE = 0
-
 dumb_cpu = CPU()
 
-dumb_cpu.memory.write(ONE, 1)
+dumb_cpu.memory.write(0, 1)
+dumb_cpu.memory.write(1, 7)
+dumb_cpu.memory.write(2, 13)
+
 
 instructions = {
     0: Instruction(
         Opcode.LOAD,
-        ("R0", ONE)
+        ("R0", 0)
     ),
     1: Instruction(
-        Opcode.ADD,
-        ("R1", "R0")
+        Opcode.LOAD,
+        ("R1", 1)
     ),
     2: Instruction(
-        Opcode.ADD,
-        ("R1", "R1")
+        Opcode.LOAD,
+        ("R2", 2)
     ),
     3: Instruction(
         Opcode.ADD,
-        ("R1", "R1")
-    ),
-    4: Instruction(
-        Opcode.ADD,
-        ("R1", "R1")
-    ),
-
-    5: Instruction(
-        Opcode.SUB,
-        ("R1", "R0")
-    ),
-
-    6: Instruction(
-        Opcode.STORE,
-        ("R1", 1)
-    ),
-    7: Instruction(
-        Opcode.ADD,
-        ("R2", "R0")
-    ),
-    8: Instruction(
-        Opcode.ADD,
-        ("R2", "R2")
-    ),
-    9: Instruction(
-        Opcode.ADD,
-        ("R2", "R0")
-    ),
-    10: Instruction(
-        Opcode.ADD,
-        ("R2", "R2")
-    ),
-    11: Instruction(
-        Opcode.ADD,
-        ("R2", "R2")
-    ),
-    12: Instruction(
-        Opcode.ADD,
-        ("R2", "R0")
-    ),
-    13: Instruction(
-        Opcode.STORE,
-        ("R2", 2)
-    ),
-    14: Instruction(
-        Opcode.ADD,
         ("R3", "R2")
     ),
-    15: Instruction(
+    4: Instruction(
         Opcode.SUB,
         ("R1", "R0")
     ),
-    16: Instruction(
+    5: Instruction(
         Opcode.CMP,
         ("R1", "R0")
     ),
-    17: Instruction(
+    6: Instruction(
         Opcode.JS,
-        (19, )
+        (8, )
     ),
-    18: Instruction(
+    7: Instruction(
         Opcode.JMP,
-        (14, )
+        (3, )
     ),
-    19: Instruction(
+    8: Instruction(
         Opcode.STORE,
         ("R3", 3)
     ),
-    20: Instruction(
+    9: Instruction(
         Opcode.HALT
     )
 }
@@ -363,6 +317,6 @@ instructions = {
 dumb_cpu.load_program(instructions)
 dumb_cpu.run()
 
-for i in range(3 + 1):
+for i in range(4):
     print(dumb_cpu.memory.read(i))
 
