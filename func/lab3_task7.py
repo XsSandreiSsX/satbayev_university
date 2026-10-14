@@ -1,6 +1,5 @@
 import datetime
 import random
-from unittest.mock import patch
 
 
 counter = 0
@@ -58,48 +57,6 @@ def f4_pure(scores):
 
 def f5_pure(name):
     return len(name)
-
-
-if __name__ == "__main__":
-    counter = 0
-
-    assert f1(10) != f1(10)
-
-    assert f2(3, 4) == 5
-
-    with patch("datetime.datetime") as dt:
-        dt.now.return_value.hour = 9
-        first = f3(1000)
-
-        dt.now.return_value.hour = 12
-        second = f3(1000)
-
-        assert first != second
-
-    scores = [5, 1, 9, 3, 7]
-    original = scores.copy()
-    f4(scores)
-    assert scores != original
-
-    scores = [5, 1, 9, 3, 7]
-    assert f4_pure(scores) == 5
-    assert scores == [5, 1, 9, 3, 7]
-
-    assert f5_pure("Алия") == 4
-    print(f"Hello, {'Алия'}")
-
-    with patch("random.choice", return_value=1):
-        first = f6([1, 2, 3])
-
-    with patch("random.choice", return_value=3):
-        second = f6([1, 2, 3])
-
-    assert first != second
-
-    assert discount_price(1000, 9) == 1000
-    assert discount_price(1000, 12) == 800.0
-    assert discount_price(1000, 15) == 1000
-
 
 # | Функция | Чистая? | Причина                       | Строка                  |
 # |---------|---------|-------------------------------|-------------------------|

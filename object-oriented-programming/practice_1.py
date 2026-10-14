@@ -629,7 +629,7 @@ for employee in employees:
 
 customers = [
     Customer("Андрей", 19),
-    Customer("madk1d", 20),
+    Customer("Анатолий", 20),
     Customer("бомж", 21),
 ]
 
